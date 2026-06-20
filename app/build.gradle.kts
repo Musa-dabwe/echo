@@ -9,9 +9,21 @@ plugins {
 }
 
 val hasGoogleServices = file("google-services.json").exists()
-val gitHash = execute("git", "rev-parse", "HEAD").take(7)
+
+fun execute(vararg command: String): String = try {
+    providers.exec {
+        commandLine(*command)
+        isIgnoreExitValue = true
+    }.standardOutput.asText.get().trim()
+} catch (e: Exception) {
+    ""
+}
+
+val gitHash = execute("git", "rev-parse", "HEAD")
+    .takeIf { it.isNotBlank() }?.take(7) ?: "unknown"
+
 val gitCountString = execute("git", "rev-list", "--count", "HEAD")
-val gitCount = if (gitCountString == "unknown") 0 else gitCountString.toInt()
+val gitCount = gitCountString.toIntOrNull() ?: 0
 val version = "3.0.$gitCount"
 
 android {
@@ -92,8 +104,3 @@ if (hasGoogleServices) {
     apply(plugin = libs.plugins.gms.get().pluginId)
     apply(plugin = libs.plugins.crashlytics.get().pluginId)
 }
-
-fun execute(vararg command: String): String = providers.exec {
-    commandLine(*command)
-    isIgnoreExitValue = true
-}.standardOutput.asText.map { it.trim() }.getOrElse("unknown")
