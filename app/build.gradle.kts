@@ -10,7 +10,8 @@ plugins {
 
 val hasGoogleServices = file("google-services.json").exists()
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
-val gitCount = execute("git", "rev-list", "--count", "HEAD").toInt()
+val gitCountString = execute("git", "rev-list", "--count", "HEAD")
+val gitCount = if (gitCountString == "unknown") 0 else gitCountString.toInt()
 val version = "3.0.$gitCount"
 
 android {
@@ -94,4 +95,5 @@ if (hasGoogleServices) {
 
 fun execute(vararg command: String): String = providers.exec {
     commandLine(*command)
-}.standardOutput.asText.get().trim()
+    isIgnoreExitValue = true
+}.standardOutput.asText.map { it.trim() }.getOrElse("unknown")
