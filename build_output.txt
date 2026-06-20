@@ -1,0 +1,17 @@
+Starting build...
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/storage/emulated/0/AndroidIDEProjects/echo/app/build.gradle.kts' line: 97
+
+* What went wrong:
+Process 'command 'git'' finished with non-zero exit value 128
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (Powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+CONFIGURE FAILED in 3m 26s
